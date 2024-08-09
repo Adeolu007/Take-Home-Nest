@@ -8,6 +8,7 @@ import { LoginDto } from './dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken } from './schemas/refresh-token.schema';
 import {v4 as uuidv4} from 'uuid';
+import { UpdateUserDto } from './dtos/update-user.dto';
 @Injectable()
 export class AuthService {
 
@@ -32,6 +33,20 @@ async register(registerData: RegisterDto){
     await this.UserModel.create({
         name, email, password: hashedPassword,
     })
+}
+
+async updateUser(userId: string, updateData: UpdateUserDto){
+    const {name, email, password, } = updateData;
+    const user = await this.UserModel.findById(userId);
+    if(!user){
+        throw new UnauthorizedException('wrong credentials')
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password)
+    if(!passwordMatch){
+        throw new UnauthorizedException('wrong credentials')
+    }
+    await this.UserModel.findByIdAndUpdate(userId, updateData, { new: true });
+    return this.UserModel.findById(userId);
 }
 
 async login(credentials:LoginDto){
