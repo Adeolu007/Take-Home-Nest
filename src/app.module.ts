@@ -7,7 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './config/config';
 import { BullModule } from '@nestjs/bull';
-import { UsersModule } from './UsersController/user-module'; 
+import { UsersModule } from './users-controller/user-module'; 
 
 
 // @Module({
